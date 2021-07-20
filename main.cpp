@@ -205,7 +205,7 @@ private:
 int main()
 {
 
-    unordered_map<string, int> m { {"s", 145}, {"q", 43}, {"d", 42}, {"a", 1}, {"f", -1}, {"g", 0}, {"h", 0}, {"j", 0}, {"x", 111} };
+    unordered_map<string, int> m { {"s"s, 145}, {"q"s, 43}, {"d"s, 42}, {"a"s, 1}, {"f"s, -1}, {"g"s, 0}, {"h"s, 0}, {"j"s, 0}, {"x"s, 111} };
 
     int maxElem = INT32_MIN;
     if( m.size() )
@@ -230,6 +230,8 @@ int main()
     tie(a1,b1) = tuple{7,8};
     cout << a << ":" << b << endl;
     cout << a1 << ":" << b1 << endl;
+
+    cout << "abracatabra"s.size() << endl;
 
     //    cout << count_if( begin(m), end(m), [&maxElem](auto val){ return max( maxElem, val.second); } );
 
