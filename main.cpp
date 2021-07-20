@@ -8,6 +8,9 @@
 #include <unordered_map>
 #include <array>
 #include <cstring>
+#include <unordered_map>
+#include <cstdint>
+#include <initializer_list>
 
 using namespace std;
 
@@ -112,7 +115,7 @@ bool withA( string s ) {
 }
 
 int CountStartsWithA(const vector<string>& xs) {
-    auto c = count_if( xs.begin(), xs.end(), withA );
+    auto c = static_cast<int>( count_if( xs.begin(), xs.end(), withA ) );
     return c;
 }
 
@@ -202,16 +205,44 @@ private:
 int main()
 {
 
-    SomeClass *a = new SomeClass();
-    SomeClass *b = new SomeClass();
+    unordered_map<string, int> m { {"s", 145}, {"q", 43}, {"d", 42}, {"a", 1}, {"f", -1}, {"g", 0}, {"h", 0}, {"j", 0}, {"x", 111} };
 
-    a->modify();
-    *b = *a;
-    a->print();
-    cout << a << endl;
-    delete a;
-    cout << b << endl;
-    b->print();
+    int maxElem = INT32_MIN;
+    if( m.size() )
+        maxElem = m.begin()->second;
+    for( const auto &[key, val] : m ) {
+        maxElem = max( maxElem, val );
+    }
+    cout << maxElem << endl;
+
+    vector v { 999, 11, 2, 3, 4, 5, 6, 7, 8, -1, -5, -7, 0, 99, 199, 200, 444, 1000 };
+//    cout << *v.data() << ":" << *(v.data()+v.size()-1) << endl;
+    cout << max( std::initializer_list<int>( v.data(), v.data()+v.size() ) ) << endl;
+    auto i_list = std::initializer_list<int>( v.data(), v.data()+v.size() );
+    for( auto const& elem : i_list ) {
+        cout << elem << ":";
+    }
+    cout << endl;
+
+
+    auto [a, b] = tuple{5,6};
+    int a1, b1;
+    tie(a1,b1) = tuple{7,8};
+    cout << a << ":" << b << endl;
+    cout << a1 << ":" << b1 << endl;
+
+    //    cout << count_if( begin(m), end(m), [&maxElem](auto val){ return max( maxElem, val.second); } );
+
+//    SomeClass *a = new SomeClass();
+//    SomeClass *b = new SomeClass();
+
+//    a->modify();
+//    *b = *a;
+//    a->print();
+//    cout << a << endl;
+//    delete a;
+//    cout << b << endl;
+//    b->print();
 
 
 //    unordered_map<int, int> m  { {1, 10}, {2, 15}, {3, 20}, };
