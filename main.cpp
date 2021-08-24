@@ -11,23 +11,27 @@
 #include <unordered_map>
 #include <cstdint>
 #include <initializer_list>
+#include <type_traits>
+#include <stdexcept>
+
 
 using namespace std;
 
 class A {
 public:
     A() {
-        cout << "A" << endl;
+        cout << "A::A()" << endl;
     }
 
     A(const A *obj) {
-        cout << "A copy" << endl;
+        cout << "A::A Copy Constructor" << endl;
     }
 
     A(A&& ) = default;
 
     virtual ~A() {
         static int i = 0;
+//        throw runtime_error("Error");
         cout << "~A" << ++i <<  endl;
     }
 
@@ -48,7 +52,6 @@ public:
     }
 
     shared_ptr<A> getPtr() {
-        return make_shared<A>(this);
         return shared_ptr<A>(this);
     }
 
@@ -56,8 +59,17 @@ public:
         return *this;
     }
 
+    void setNum( int num ) {
+        mNum = num;
+    }
+
+    int num() {
+        return mNum;
+    }
+
 private:
     static int dist_count;
+    int mNum = 0;
 };
 
 class B : public A {
@@ -202,36 +214,78 @@ private:
     int *i1 = nullptr;
 };
 
+
+class Y: public enable_shared_from_this<Y>
+{
+public:
+
+    shared_ptr<Y> getPtr()
+    {
+        return shared_from_this();
+    }
+
+    void exe() {
+        throw std::runtime_error("Error!");
+    }
+};
+
+
 int main()
 {
+    shared_ptr<A> sa = make_shared<A>();
+    sa->big();
 
-    unordered_map<string, int> m { {"s"s, 145}, {"q"s, 43}, {"d"s, 42}, {"a"s, 1}, {"f"s, -1}, {"g"s, 0}, {"h"s, 0}, {"j"s, 0}, {"x"s, 111} };
-
-    int maxElem = INT32_MIN;
-    if( m.size() )
-        maxElem = m.begin()->second;
-    for( const auto &[key, val] : m ) {
-        maxElem = max( maxElem, val );
+    auto y = make_shared<Y>();
+    auto y1 = y.get();
+    try {
+        y1->exe();
+    }  catch (...) {
+        cout << "exeption!" << endl;
     }
-    cout << maxElem << endl;
-
-    vector v { 999, 11, 2, 3, 4, 5, 6, 7, 8, -1, -5, -7, 0, 99, 199, 200, 444, 1000 };
-//    cout << *v.data() << ":" << *(v.data()+v.size()-1) << endl;
-    cout << max( std::initializer_list<int>( v.data(), v.data()+v.size() ) ) << endl;
-    auto i_list = std::initializer_list<int>( v.data(), v.data()+v.size() );
-    for( auto const& elem : i_list ) {
-        cout << elem << ":";
-    }
-    cout << endl;
 
 
-    auto [a, b] = tuple{5,6};
-    int a1, b1;
-    tie(a1,b1) = tuple{7,8};
-    cout << a << ":" << b << endl;
-    cout << a1 << ":" << b1 << endl;
+//    shared_ptr<Y> p( new Y );
+//    shared_ptr<Y> q = p->f();
 
-    cout << "abracatabra"s.size() << endl;
+//    assert( p == q );
+//    assert( !(p < q || q < p) );
+
+
+//    unordered_map< unsigned, int > map { {1,2}, {2,1}, {4,1} };
+//    cout << is_same< int, unsigned >::value << endl;
+//    cout << is_same< signed char, int8_t >::value << endl;
+
+//    long double num1 = 1.0;
+//    long double num2 = 2.0;
+//    cout << is_same_v<decltype(num1), decltype(num2)> << '\n';
+
+//    unordered_map<string, int> m { {"s"s, 145}, {"q"s, 43}, {"d"s, 42}, {"a"s, 1}, {"f"s, -1}, {"g"s, 0}, {"h"s, 0}, {"j"s, 0}, {"x"s, 111} };
+
+//    int maxElem = INT32_MIN;
+//    if( m.size() )
+//        maxElem = m.begin()->second;
+//    for( const auto &[key, val] : m ) {
+//        maxElem = max( maxElem, val );
+//    }
+//    cout << maxElem << endl;
+
+//    vector v { 999, 11, 2, 3, 4, 5, 6, 7, 8, -1, -5, -7, 0, 99, 199, 200, 444, 1000 };
+////    cout << *v.data() << ":" << *(v.data()+v.size()-1) << endl;
+//    cout << max( std::initializer_list<int>( v.data(), v.data()+v.size() ) ) << endl;
+//    auto i_list = std::initializer_list<int>( v.data(), v.data()+v.size() );
+//    for( auto const& elem : i_list ) {
+//        cout << elem << ":";
+//    }
+//    cout << endl;
+
+
+//    auto [a, b] = tuple{5,6};
+//    int a1, b1;
+//    tie(a1,b1) = tuple{7,8};
+//    cout << a << ":" << b << endl;
+//    cout << a1 << ":" << b1 << endl;
+
+//    cout << "abracatabra"s.size() << endl;
 
     //    cout << count_if( begin(m), end(m), [&maxElem](auto val){ return max( maxElem, val.second); } );
 
@@ -288,6 +342,14 @@ int main()
 
 //    C c;
 //    c.big();
+
+//    A a;
+//    auto a1 = a.getPtr();
+
+//    a1->setNum( -1 );
+
+//    cout << a.num() << endl;
+//    cout << a1->num() << endl;
 
 return 0;
 }
