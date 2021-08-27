@@ -23,8 +23,12 @@ public:
         cout << "A::A()" << endl;
     }
 
-    A(const A *obj) {
-        cout << "A::A Copy Constructor" << endl;
+    A( const A &a ) {
+        cout << "A::COPY" << endl;
+    }
+
+    A(const A *a ) {
+        cout << "A::COPY*" << endl;
     }
 
     A(A&& ) = default;
@@ -230,18 +234,27 @@ public:
 };
 
 
+void func( B b ) {
+    b.big();
+}
+
+
 int main()
 {
-    shared_ptr<A> sa = make_shared<A>();
-    sa->big();
+//    shared_ptr<A> sa = make_shared<A>();
+//    sa->big();
 
-    auto y = make_shared<Y>();
-    auto y1 = y.get();
-    try {
-        y1->exe();
-    }  catch (...) {
-        cout << "exeption!" << endl;
-    }
+    C c;
+    c.big();
+    func(c);
+
+//    auto y = make_shared<Y>();
+//    auto y1 = y.get();
+//    try {
+//        y1->exe();
+//    }  catch (...) {
+//        cout << "exeption!" << endl;
+//    }
 
 
 //    shared_ptr<Y> p( new Y );
