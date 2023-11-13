@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <cstdint>
 #include <initializer_list>
+#include <fstream>
 
 using namespace std;
 
@@ -84,7 +85,7 @@ public:
         cout << "function B::func()" << endl;
     }
 
-    void big() {
+    void big() override {
         cout << "function B::big()" << endl;
     }
 };
@@ -99,8 +100,13 @@ public:
         static int i = 0;
         cout << "~C" << ++i <<  endl;
     }
-    void big()  {
+
+    void big()  override{
         cout << "function C::big()" << endl;
+    }
+
+    void func() {
+        cout << "function C::func()" << endl;
     }
 };
 
@@ -202,36 +208,131 @@ private:
     int *i1 = nullptr;
 };
 
+pair<string, int> get_max(const vector<int> &v) {
+    if( v.empty() )
+        return pair<string, int>();
+
+    return pair<string, int>();
+}
+
+int solution(vector<int> &A) {
+    // write your code in C++14 (g++ 6.2.0)
+    int min = 1;
+    sort( A.begin(), A.end() );
+    for( const auto& elem : A ) {
+        cout << "elem=" << elem << " min=" << min << endl;
+        if( min == elem )
+            ++min;
+        cout << "1elem=" << elem << " 1min=" << min << endl;
+    }
+
+    return min;
+}
+
+
+bool isDigit( const char ch )
+{
+    if( (ch >='0' && ch <= '9') )
+        return true;
+
+return false;
+}
+
+bool noMinus( const char ch ) {
+    if( ch != '-')
+        return true;
+    else
+        return false;
+}
+
+int solution(string &S) {
+    // write your code in C++
+
+    if( S.empty() )
+        return 0;
+
+    auto str = S.data();
+
+    while ( *str != '\0' && ( *str == '0' || noMinus(*str) ) && false == isDigit(*str)) {
+        ++str;
+    }
+
+    bool minus = false;
+    if( *str == '-' ) {
+        minus = true;
+        ++str;
+    }
+
+    int result;
+    while( *str != '\0' && true == isDigit(*str) ) {
+        result = result*10 + (*str-'0');
+        ++str;
+    }
+
+    if( minus )
+        result = -result;
+
+    return result;
+}
+
+
 int main()
 {
+//    ifstream file("d:\\downloads\\passport_list.csv");
 
-    unordered_map<string, int> m { {"s"s, 145}, {"q"s, 43}, {"d"s, 42}, {"a"s, 1}, {"f"s, -1}, {"g"s, 0}, {"h"s, 0}, {"j"s, 0}, {"x"s, 111} };
+//    string s;
+//    uint32_t i = 0;
+//    if( file.is_open() ) {
+//        cout << "OPEn!" << endl;
+//        while( !file.eof() ) {
+////            file >> s;
+//            getline( file, s );
+//            ++i;
+//        }
+//    } else {
+//        cout << "Oi oi oi, не могу открыть файл" << endl;
+//    }
 
-    int maxElem = INT32_MIN;
-    if( m.size() )
-        maxElem = m.begin()->second;
-    for( const auto &[key, val] : m ) {
-        maxElem = max( maxElem, val );
-    }
-    cout << maxElem << endl;
+//    cout << "Number lines = " << i << endl << "last line = " << s << endl ;
 
-    vector v { 999, 11, 2, 3, 4, 5, 6, 7, 8, -1, -5, -7, 0, 99, 199, 200, 444, 1000 };
+//    string  s = "   42";
+//    cout << solution(s) << endl;
+
+//    vector v = {1, 3, 6, 4, 1, 2};
+//    cout << solution( v ) << endl;
+
+//    unordered_map<string, int> m { {"s"s, 145}, {"q"s, 43}, {"d"s, 42}, {"a"s, 1}, {"f"s, -1}, {"g"s, 0}, {"h"s, 0}, {"j"s, 0}, {"x"s, 111} };
+
+//    int maxElem = INT32_MIN;
+//    if( m.size() )
+//        maxElem = m.begin()->second;
+//    for( const auto &[key, val] : m ) {
+//        maxElem = max( maxElem, val );
+//    }
+//    cout << maxElem << endl;
+
+//    vector v { 999, 11, 2, 3, 4, 5, 6, 7, 8, -1, -5, -7, 0, 99, 199, 200, 444, 1000 };
 //    cout << *v.data() << ":" << *(v.data()+v.size()-1) << endl;
-    cout << max( std::initializer_list<int>( v.data(), v.data()+v.size() ) ) << endl;
-    auto i_list = std::initializer_list<int>( v.data(), v.data()+v.size() );
-    for( auto const& elem : i_list ) {
-        cout << elem << ":";
-    }
-    cout << endl;
+
+    // MSVC -- работает
+//    cout << max( std::initializer_list<int>( v.data(), v.data() + v.size() ) ) << endl;
+//    auto i_list = std::initializer_list<int>( v.data(), v.data()+v.size() );
+
+//    for( auto const& elem : i_list ) {
+//        cout << elem << ":";
+//    }
+//    cout << endl;
+
+//    cout << *max_element( v.begin(), v.end() ) << endl;
 
 
-    auto [a, b] = tuple{5,6};
-    int a1, b1;
-    tie(a1,b1) = tuple{7,8};
-    cout << a << ":" << b << endl;
-    cout << a1 << ":" << b1 << endl;
+//    auto [a, b] = tuple{5,6};
+//    int a1, b1;
+//    tie(a1,b1) = tuple{7,8};
+//    cout << a << ":" << b << endl;
+//    cout << a1 << ":" << b1 << endl;
 
-    cout << "abracatabra"s.size() << endl;
+//    cout << "abracatabra"s.size() << endl;
 
     //    cout << count_if( begin(m), end(m), [&maxElem](auto val){ return max( maxElem, val.second); } );
 
@@ -259,7 +360,7 @@ int main()
     //cout << CountStartsWithA({"And"s, "another"s, "one"s, "gone"s, "another"s, "one"s "bites"s, "the"s, "dust"s}) << endl;
 
 //    B *a = new B;
-//    A *a = new B;
+////    A *a = new B;
 //    a->print();
 //    a->f();
 //    a->func();
@@ -272,10 +373,8 @@ int main()
 
 //    A *a1 = new C;
 //    a1->big();
-//    auto ptr = a1->getPtr();
-//    auto ptr1 = ptr;
-//    auto ptr2 = ptr1;
-//
+
+
 //    a1->big();
 //    delete a1;
 
@@ -288,6 +387,9 @@ int main()
 
 //    C c;
 //    c.big();
+    A *cp = new C();
+    cp->big();
+    cp->func();
 
 return 0;
 }
